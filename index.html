@@ -1,0 +1,121 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maharashtra Districts on Map</title>
+<link rel="stylesheet" href="lib/leaflet.css">
+<script src="lib/leaflet.js"></script>
+<script src="lib/wicket.js"></script> <!-- from https://github.com/arthur-e/Wicket/blob/master/wicket.js -->
+<script src="lib/papaparse.min.js"></script><!-- from https://github.com/mholt/PapaParse/blob/master/papaparse.min.js -->
+
+
+<style>
+body,div {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+#map {
+    width: 100%;
+    height: 100%;
+}
+</style>
+</head>
+
+<body>
+<div id="map"></div>
+</body>
+<script>
+/* starting vars, constants */
+const filename = 'mhDistricts-WKT.csv';
+var clickedflag = false;
+var firstLoad = true;
+
+/* make leaflet map */
+var CartoDB_Voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+}); // from https://leaflet-extras.github.io/leaflet-providers/preview/
+var baseLayers = {"CartoDB_Voyager":CartoDB_Voyager};
+var map = L.map('map', {layers: [CartoDB_Voyager]}).setView([19,77], 7);
+
+var disLayer = new L.geoJson(null).addTo(map);
+// ###################################
+
+Papa.parse(`${filename}?_=${(new Date).getTime()}`, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    dynamicTyping: false, // this reads numbers as numerical; set false to read everything as string
+    complete: function(results, file) {
+
+        results.data.forEach(r => {
+            var wkt = new Wkt.Wkt(); //  https://github.com/arthur-e/Wicket
+            wkt.read(r.WKT);
+            var feature = { "type": "Feature", 'properties': {}, "geometry": wkt.toJson() }; 
+            // wiket's .toObject() didn't work out. See details on https://gis.stackexchange.com/a/336551/44746
+
+            // assigning properties from remaining CSV columns
+            Object.entries(r).forEach(
+                ([key, value]) => {
+                    if(key != 'WKT') feature['properties'][key] = value;
+                }
+            );
+            var feature2 = L.geoJson(feature, {
+                onEachFeature: onEachFeature
+            }).bindTooltip(`${r.DISTRICT} District`, {sticky:true, offset: [10,0], direction:'right'}).addTo(disLayer);
+            
+        });
+        map.fitBounds(disLayer.getBounds()); // zoom map to fit this layer
+    }
+});
+
+// ################################
+// Leaflet geojson polygon handlers
+const origStyle = {
+    fillColor: 'green',
+    weight: 1,
+    opacity: 1,
+    color: 'black',
+    fillOpacity: 0.5
+};
+const hoverStyle = {
+    weight: 2,
+    color: 'white',
+    fillOpacity: 0.2
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+		mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: clickDistrict
+    });
+    layer.setStyle(origStyle);
+    // want to base the color off one of the columns? properties accessible through feature.properties
+}
+
+function highlightFeature(e) {
+    var layer = e.target;
+    layer.setStyle(hoverStyle);
+	if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) { // from the leaflet choropleth tutorial (official)
+		layer.bringToFront();
+    }
+    // need to access properties?
+    // var props = e.target.feature.properties;
+    
+}
+
+function resetHighlight(e) {
+    var layer = e.target;
+    layer.setStyle(origStyle);
+    // layer.resetStyle(); // gave up on resetStyle()... couldn't get it to work. Overwriting with style instead.
+    // need to access properties?
+    // var props = e.target.feature.properties;
+}
+
+function clickDistrict(e) {
+    var props = e.target.feature.properties;
+    alert(`We are going to ${props.DISTRICT}!`);
+    // put next actions here. 
+}
+</script>
+</html>
