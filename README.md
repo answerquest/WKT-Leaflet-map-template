@@ -32,8 +32,9 @@ So you can easily bring in more columns, edit your data, make fixes, combine dat
 
 
 ### Getting data in WKT form
-If you have your data loaded up on QGIS, then follow this guide: https://dominoc925.blogspot.com/2018/01/using-qgis-to-export-csv-files-with.html  
-You can also search online for "covert KML to WKT" etc.
+- If you have your data loaded up on QGIS, then follow this guide: https://dominoc925.blogspot.com/2018/01/using-qgis-to-export-csv-files-with.html  
+- You can also search online for "covert KML to WKT" etc.
+- Draw your own shapes! https://clydedacruz.github.io/openstreetmap-wkt-playground/
 
 
 ### Libraries used
