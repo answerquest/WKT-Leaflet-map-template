@@ -7,6 +7,8 @@ A template that others can use, where the following things have been achieved:
 - Basic (but difficult to code!) interactions like hover, click are set up
 - Any kind of geo data like point, polygon, line, multipolygon etc can be loaded; and multiple kinds can be loaded togther.
 
+![screenshot](map-screenshot-1.jpg)
+
 
 ### Advantage of WKT:
 The data is in a simple table like so:
