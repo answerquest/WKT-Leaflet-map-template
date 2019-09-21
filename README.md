@@ -42,4 +42,9 @@ You can also search online for "covert KML to WKT" etc.
 - **[Leaflet](https://leafletjs.com/)** for the map
 
 
+### Note on data
+Data retrieved from [India 2018 Districts](https://github.com/justinelliotmeyers/INDIA_2018_DISTRICTS) repo.  
+Processing done: Filtered for Maharashtra-only districts in QGIS, then loaded on [mapshaper.org](http://mapshaper.org) for simplifying, then loaded in QGIS again and saved as CSV with WKT.
+
+
 Proudly Made In India by [Nikhil VJ](https://nikhilvj.co.in)
