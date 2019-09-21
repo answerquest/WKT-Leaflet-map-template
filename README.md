@@ -37,7 +37,7 @@ You can also search online for "covert KML to WKT" etc.
 
 
 ### Libraries used
-- **[Wicket](https://github.com/arthur-e/Wicket)** for wicket to geojson conversion
+- **[Wicket](https://github.com/arthur-e/Wicket)** for WKT to geojson conversion
 - **[Papa.parse]()** for loading the CSV file as a json array
 - **[Leaflet](https://leafletjs.com/)** for the map
 
