@@ -36,7 +36,12 @@ var CartoDB_Voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles
 	maxZoom: 19
 }); // from https://leaflet-extras.github.io/leaflet-providers/preview/
 var baseLayers = {"CartoDB_Voyager":CartoDB_Voyager};
-var map = L.map('map', {layers: [CartoDB_Voyager]}).setView([19,77], 7);
+var map = L.map('map', {
+    layers: [CartoDB_Voyager],
+    maxBounds: [[15,67],[23,87]], 
+    minZoom: 7,
+    maxBoundsViscosity: 0.9
+}).setView([19,77], 7);
 
 var disLayer = new L.geoJson(null).addTo(map);
 // ###################################
